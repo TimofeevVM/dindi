@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Blog\Infrastructure\Repository;
 
 use Blog\Domain\Post;
+use Blog\Domain\PostRepository;
 use Laminas\Hydrator\NamingStrategy\MapNamingStrategy;
 use Shared\Infrastructure\Dbal\ConnectionFactory;
 use Shared\Infrastructure\Hydrator\TypedReflectionHydrator;
 
-final class DbalPostRepository
+final class DbalPostRepository implements PostRepository
 {
     public function save(Post $post): void
     {

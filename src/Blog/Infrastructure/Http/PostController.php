@@ -6,6 +6,7 @@ namespace Blog\Infrastructure\Http;
 
 use Blog\Application\UseCase\CreatePost\CreatePostCommand;
 use Blog\Application\UseCase\CreatePost\CreatePostHandler;
+use Blog\Infrastructure\Repository\DbalPostRepository;
 
 final class PostController
 {
@@ -15,7 +16,7 @@ final class PostController
         $data = json_decode($body, true);
 
         $command = new CreatePostCommand($data['title'], $data['body']);
-        $handler = new CreatePostHandler();
+        $handler = new CreatePostHandler(new DbalPostRepository());
         $response = $handler($command);
 
         echo json_encode([

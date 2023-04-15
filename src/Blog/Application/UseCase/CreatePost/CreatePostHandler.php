@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Blog\Application\UseCase\CreatePost;
 
 use Blog\Domain\Post;
-use Blog\Infrastructure\Repository\DbalPostRepository;
+use Blog\Domain\PostRepository;
 
 final class CreatePostHandler
 {
+    public function __construct(
+        private readonly PostRepository $postRepository
+    )
+    {
+    }
+
     public function __invoke(CreatePostCommand $command): CreatePostResponse
     {
         $post = new Post(
@@ -17,8 +23,7 @@ final class CreatePostHandler
             $command->body
         );
 
-        $repository = new DbalPostRepository();
-        $repository->save($post);
+        $this->postRepository->save($post);
 
         return new CreatePostResponse($post->getId());
     }
