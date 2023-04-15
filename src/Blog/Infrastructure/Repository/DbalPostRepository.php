@@ -6,15 +6,21 @@ namespace Blog\Infrastructure\Repository;
 
 use Blog\Domain\Post;
 use Blog\Domain\PostRepository;
+use Doctrine\DBAL\Connection;
 use Laminas\Hydrator\NamingStrategy\MapNamingStrategy;
-use Shared\Infrastructure\Dbal\ConnectionFactory;
 use Shared\Infrastructure\Hydrator\TypedReflectionHydrator;
 
 final class DbalPostRepository implements PostRepository
 {
+    public function __construct(
+        private readonly Connection $connection
+    )
+    {
+    }
+
     public function save(Post $post): void
     {
-        ConnectionFactory::fromEnv()->insert(
+        $this->connection->insert(
             'post',
             [
                 'id' => $post->getId(),
@@ -28,7 +34,7 @@ final class DbalPostRepository implements PostRepository
 
     public function ofId(string $id): Post
     {
-        $data = ConnectionFactory::fromEnv()
+        $data = $this->connection
             ->createQueryBuilder()
             ->from('post')
             ->select('*')

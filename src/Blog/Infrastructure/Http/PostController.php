@@ -7,6 +7,7 @@ namespace Blog\Infrastructure\Http;
 use Blog\Application\UseCase\CreatePost\CreatePostCommand;
 use Blog\Application\UseCase\CreatePost\CreatePostHandler;
 use Blog\Infrastructure\Repository\DbalPostRepository;
+use Shared\Infrastructure\Dbal\ConnectionFactory;
 
 final class PostController
 {
@@ -16,7 +17,11 @@ final class PostController
         $data = json_decode($body, true);
 
         $command = new CreatePostCommand($data['title'], $data['body']);
-        $handler = new CreatePostHandler(new DbalPostRepository());
+
+        $connection = ConnectionFactory::fromEnv();
+        $repository = new DbalPostRepository($connection);
+        $handler = new CreatePostHandler($repository);
+
         $response = $handler($command);
 
         echo json_encode([
