@@ -2,6 +2,8 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+$configDi = require __DIR__ . '/../config/di.php';
+$container = (new \Shared\Infrastructure\PhpDI\PhpDIFactory())->create($configDi);
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', function () {
@@ -37,21 +39,6 @@ switch ($routeInfo[0]) {
             break;
         }
 
-        if (is_array($handler)) {
-            if (class_exists($handler[0]) === false) {
-                throw new Exception(
-                    sprintf('Class %s not found', $handler[0])
-                );
-            }
-
-            $classHandler = new $handler[0]();
-            if (method_exists($classHandler, $handler[1]) === false) {
-                throw new Exception(
-                    sprintf('Method %s of %s not found', $handler[1], $handler[0])
-                );
-            }
-
-            $classHandler->{$handler[1]}();
-        }
+        $container->call($handler);
         break;
 }

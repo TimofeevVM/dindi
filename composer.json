@@ -11,6 +11,7 @@
         "nikic/fast-route": "^1.3",
         "doctrine/dbal": "^3.6",
         "alexpts/php-hydrator": "^5.0",
-        "laminas/laminas-hydrator": "^4.13"
+        "laminas/laminas-hydrator": "^4.13",
+        "php-di/php-di": "^7.0"
     }
 }
